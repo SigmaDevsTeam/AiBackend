@@ -54,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
             String username = jwtUtil.getUsername(jwtToken);
             User user;
             try {
-                user = userService.findByUsername(username);
+                user = userService.getUserByUsername(username);
             } catch (NotFoundException e) {
                 log.debug("Token contains a non-existent user");
                 filterChain.doFilter(request, response);

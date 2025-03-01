@@ -1,24 +1,24 @@
 package com.sigmadevs.aiintegration.api;
 
-import com.sigmadevs.aiintegration.entity.User;
 import com.sigmadevs.aiintegration.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
+@Slf4j
 @RestController
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
 
+    private final UserService userService;
     @PostMapping("/setMainToken")
-    public String setMainToken(@RequestBody String token, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
-        user.setMainToken(token);
-        userService.save(user);
-        return "Token set successfully";
+    public ResponseEntity<String> setMainToken(@RequestBody String token, Principal principal) {
+        log.info("Received request to set main token for user: {}", principal.getName());
+        userService.setMainToken(token, principal.getName());
+        return ResponseEntity.ok("Token set successfully");
     }
 }

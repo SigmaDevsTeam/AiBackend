@@ -64,7 +64,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             log.debug("HELLO OAUTH: {} : {} : {}", email, name, username);
 
             AtomicReference<User> main = new AtomicReference<>();
-            userService.findByEmailOptional(email)
+            userService.getUserByEmail(email)
                     .ifPresentOrElse(user -> {
                         main.set(user);
                         DefaultOAuth2User oauthUser = new DefaultOAuth2User(
@@ -85,7 +85,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                         newUser.setImage(avatarUrl);
                         newUser.setEmail(email);
                         newUser.setLoginToken(getAccessToken(authentication));
-                        User saved = userService.save(newUser);
+                        User saved = userService.registerUser(newUser);
                         main.set(saved);
                         DefaultOAuth2User oauthUser = new DefaultOAuth2User(
                                 Collections.singleton(newUser.getRole()),
